@@ -1,0 +1,28 @@
+.layout {
+    min-height: 100vh;
+    background-color: var(--color-gray-50);
+}
+
+.layout__content {
+    margin-left: 240px;
+    padding-top: 64px;
+    min-height: 100vh;
+}
+
+.layout__main {
+    padding: var(--spacing-lg);
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+    .layout__content {
+        margin-left: 0;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 640px) {
+    .layout__main {
+        padding: var(--spacing-md);
+    }
+}
