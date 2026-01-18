@@ -43,7 +43,7 @@
 
 ## M1: 핵심 UI 및 디자인 시스템 구축
 
-### [] M1-1: CSS 변수 및 글로벌 스타일 설정
+### [x] M1-1: CSS 변수 및 글로벌 스타일 설정
 
 **컨텍스트**: 디자인 시스템을 CSS 변수로 구현합니다.
 
@@ -52,8 +52,8 @@
 - Pretendard 폰트 적용
 
 **인수 조건**:
-- [ ] CSS 변수 (colors, spacing, typography) 정의
-- [ ] 글로벌 reset CSS 적용
+- [x] CSS 변수 (colors, spacing, typography) 정의
+- [x] 글로벌 reset CSS 적용
 
 ---
 
