@@ -1,19 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { dashboardApi } from "../services/api";
-import { SummaryCards, ProfessorUsageList, CostChart } from "../components/dashboard";
+import { SummaryCards, ProfessorUsageList } from "../components/dashboard";
 import type {
   DashboardSummaryResponse,
   DashboardProfessorsResponse,
-  DashboardCostsResponse,
-  CostPeriod,
 } from "../types";
 import styles from "./DashboardPage.module.css";
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummaryResponse | null>(null);
   const [professors, setProfessors] = useState<DashboardProfessorsResponse | null>(null);
-  const [costs, setCosts] = useState<DashboardCostsResponse | null>(null);
-  const [period, setPeriod] = useState<CostPeriod>("weekly");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,43 +18,28 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
 
-      const [summaryData, professorsData, costsData] = await Promise.all([
+      const [summaryData, professorsData] = await Promise.all([
         dashboardApi.getSummary(),
         dashboardApi.getProfessors(),
-        dashboardApi.getCosts(period),
       ]);
 
       setSummary(summaryData);
       setProfessors(professorsData);
-      setCosts(costsData);
     } catch (err) {
       console.error("Failed to fetch dashboard data:", err);
       setError("데이터를 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
     }
-  }, [period]);
+  }, []);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const handlePeriodChange = async (newPeriod: CostPeriod) => {
-    setPeriod(newPeriod);
-    try {
-      const costsData = await dashboardApi.getCosts(newPeriod);
-      setCosts(costsData);
-    } catch (err) {
-      console.error("Failed to fetch costs:", err);
-    }
-  };
-
   const calculateTodayCost = () => {
-    if (!costs) return 0;
-    const today = new Date().toISOString().split("T")[0];
-    return costs.daily_costs
-      .filter((c) => c.date === today)
-      .reduce((sum, c) => sum + c.cost, 0);
+    if (!summary) return 0;
+    return summary.total_used * 800;
   };
 
   if (loading) {
@@ -98,10 +79,6 @@ export default function DashboardPage() {
 
       <div className={styles.section}>
         <ProfessorUsageList data={professors} />
-      </div>
-
-      <div className={styles.section}>
-        <CostChart data={costs} period={period} onPeriodChange={handlePeriodChange} />
       </div>
     </div>
   );
