@@ -7,6 +7,9 @@ import type {
   RackCreate,
   RackUpdate,
   ProfessorListResponse,
+  ProfessorActionResponse,
+  ProfessorCreate,
+  ProfessorUpdate,
   AssignRequest,
   ReleaseRequest,
 } from "../types";
@@ -82,6 +85,33 @@ export const professorApi = {
   async getProfessors(): Promise<ProfessorListResponse> {
     const response = await apiClient.get<ProfessorListResponse>("/professors");
     return response.data;
+  },
+
+  async createProfessor(data: ProfessorCreate): Promise<ProfessorActionResponse> {
+    try {
+      const response = await apiClient.post<ProfessorActionResponse>("/professors", data);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+
+  async updateProfessor(professorId: number, data: ProfessorUpdate): Promise<ProfessorActionResponse> {
+    try {
+      const response = await apiClient.put<ProfessorActionResponse>(`/professors/${professorId}`, data);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+
+  async deleteProfessor(professorId: number): Promise<ProfessorActionResponse> {
+    try {
+      const response = await apiClient.delete<ProfessorActionResponse>(`/professors/${professorId}`);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
   },
 };
 

@@ -9,9 +9,11 @@ from app.schemas.cage import (
     ReleaseRequest,
 )
 from app.schemas.professor import (
+    ProfessorActionResponse,
     ProfessorCreate,
     ProfessorListResponse,
     ProfessorResponse,
+    ProfessorUpdate,
 )
 from app.schemas.rack import (
     RackActionResponse,
@@ -26,10 +28,12 @@ __all__ = [
     "CageActionResponse",
     "CageGridResponse",
     "CageResponse",
+    "ProfessorActionResponse",
     "ProfessorCreate",
     "ProfessorInfo",
     "ProfessorListResponse",
     "ProfessorResponse",
+    "ProfessorUpdate",
     "RackActionResponse",
     "RackCreate",
     "RackListResponse",

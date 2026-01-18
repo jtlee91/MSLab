@@ -16,9 +16,18 @@ class ProfessorCreate(ProfessorBase):
     pass
 
 
+class ProfessorUpdate(BaseModel):
+    """Schema for updating a Professor."""
+    name: str | None = None
+    student_name: str | None = None
+    contact: str | None = None
+    color_code: str | None = None
+
+
 class ProfessorResponse(ProfessorBase):
     """Schema for Professor response."""
     id: int
+    assigned_count: int = 0
 
     class Config:
         from_attributes = True
@@ -27,3 +36,10 @@ class ProfessorResponse(ProfessorBase):
 class ProfessorListResponse(BaseModel):
     """Schema for list of Professors."""
     professors: list[ProfessorResponse]
+
+
+class ProfessorActionResponse(BaseModel):
+    """Schema for Professor action response."""
+    success: bool
+    message: str
+    professor: ProfessorResponse | None = None

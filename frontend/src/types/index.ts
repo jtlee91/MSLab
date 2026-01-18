@@ -4,6 +4,27 @@ export interface Professor {
   student_name: string | null;
   contact: string | null;
   color_code: string;
+  assigned_count: number;
+}
+
+export interface ProfessorCreate {
+  name: string;
+  student_name?: string | null;
+  contact?: string | null;
+  color_code?: string;
+}
+
+export interface ProfessorUpdate {
+  name?: string;
+  student_name?: string | null;
+  contact?: string | null;
+  color_code?: string;
+}
+
+export interface ProfessorActionResponse {
+  success: boolean;
+  message: string;
+  professor: Professor | null;
 }
 
 export interface ProfessorInfo {
