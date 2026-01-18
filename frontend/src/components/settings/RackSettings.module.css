@@ -95,6 +95,11 @@
   background-color: var(--color-gray-50);
 }
 
+.table th:last-child,
+.table td:last-child {
+  width: 120px;
+}
+
 .table tbody tr:hover {
   background-color: var(--color-gray-50);
 }
