@@ -1,6 +1,6 @@
 # TASKS: AI 개발 파트너용 태스크
 
-> **문서 버전**: v1.0 | **작성일**: 2026-01-18
+> **문서 버전**: v1.1 | **작성일**: 2026-01-18 | **최종 수정**: 2026-01-18
 
 ---
 
@@ -134,12 +134,17 @@
 **흐름**: [03_UserFlow.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/03_UserFlow.md) FEAT-1 섹션
 
 **인수 조건**:
-- [x] 랙 탭 전환 (랙1/랙2/랙3)
-- [x] 그리드 형태 케이지 표시 (색상으로 교수 구분)
-- [x] 빈 케이지 더블클릭 → 교수 선택 팝업 → 즉시 배정
-- [x] 사용 중 케이지 클릭 → "사용 종료?" 확인 → 해제
-- [x] 3~5초 폴링으로 최신 데이터 반영
-- [x] 충돌 시 알림 + 자동 새로고침
+- [x] 랙 탭 전환 (랙1/랙2/랙3) - `RackTabs.tsx`
+- [x] 그리드 형태 케이지 표시 (색상으로 교수 구분) - `CageGrid.tsx`, `CageCell.tsx`
+- [x] 빈 케이지 **클릭** → 교수 선택 팝업 → 즉시 배정 (모바일 지원을 위해 더블클릭→클릭으로 변경)
+- [x] 사용 중 케이지 클릭 → "사용 종료?" 확인 → 해제 - `ConfirmReleaseModal.tsx`
+- [x] 5초 폴링으로 최신 데이터 반영 - `useCageGrid.ts`
+- [x] 충돌 시 알림 + 자동 새로고침 (409 응답 처리)
+
+**구현 파일**:
+- `frontend/src/pages/CagesPage.tsx` - 메인 페이지
+- `frontend/src/hooks/useCageGrid.ts` - 상태 관리 훅
+- `frontend/src/components/cages/*` - UI 컴포넌트
 
 ---
 
@@ -148,10 +153,22 @@
 **사용자 스토리**: [01_PRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/01_PRD.md) US-1.4
 
 **인수 조건**:
-- [x] 랙 목록 조회
-- [x] 랙 추가 (이름, 행, 열)
-- [x] 랙 수정
-- [x] 랙 삭제 (케이지 없을 때만)
+- [x] 랙 목록 조회 (`GET /api/racks` - 사용 중 케이지 수 포함)
+- [x] 랙 추가 (이름, 행, 열) - 케이지 자동 생성
+- [x] 랙 수정 - 크기 확대/축소 지원 (축소 시 배정된 케이지 체크)
+- [x] 랙 삭제 (케이지 배정 없을 때만 - UI에서 삭제 버튼 비활성화)
+
+**구현 파일**:
+- `backend/app/api/routes/racks.py` - CRUD API
+- `frontend/src/components/settings/RackSettings.tsx` - 메인 UI
+- `frontend/src/components/settings/RackFormModal.tsx` - 추가/수정 모달
+- `frontend/src/components/settings/ConfirmDeleteModal.tsx` - 삭제 확인 모달
+
+**추가 구현 사항**:
+- 랙별 사용 중 케이지 수 표시 (뱃지)
+- 케이지가 배정된 랙은 삭제 버튼 비활성화
+- 랙 크기 변경 시 기존 데이터 유지 (필요한 케이지만 추가/삭제)
+- 크기 축소 시 삭제될 영역에 배정된 케이지가 있으면 에러 메시지 표시
 
 ---
 

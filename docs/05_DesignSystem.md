@@ -1,6 +1,6 @@
 # Design System: 연구실 케이지 관리 서비스
 
-> **문서 버전**: v1.0 | **작성일**: 2026-01-18
+> **문서 버전**: v1.1 | **작성일**: 2026-01-18 | **최종 수정**: 2026-01-18
 
 ---
 
@@ -155,9 +155,127 @@ font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
 ## 7. 접근성 체크리스트
 
-| 항목 | 기준 |
-|------|------|
-| 색상 대비 | WCAG AA (4.5:1) 이상 |
-| 포커스 링 | 키보드 탐색 시 visible |
-| 터치 영역 | 최소 44x44px |
-| 텍스트 크기 | 최소 14px |
+| 항목 | 기준 | 구현 상태 |
+|------|------|-----------|
+| 색상 대비 | WCAG AA (4.5:1) 이상 | ✅ |
+| 포커스 링 | 키보드 탐색 시 visible | ✅ `:focus-visible` 적용 |
+| 터치 영역 | 최소 44x44px | ✅ `--height-touch-target: 44px` |
+| 텍스트 크기 | 최소 14px | ✅ `--font-size-body: 14px` |
+
+---
+
+## 8. 구현된 CSS 변수 (index.css)
+
+```css
+:root {
+  /* Primary Colors */
+  --color-primary: #3B82F6;
+  --color-primary-light: #DBEAFE;
+  --color-primary-dark: #1D4ED8;
+
+  /* Semantic Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #0EA5E9;
+
+  /* Neutral Colors */
+  --color-gray-900: #111827;
+  --color-gray-500: #6B7280;
+  --color-gray-200: #E5E7EB;
+  --color-gray-50: #F9FAFB;
+  --color-white: #FFFFFF;
+
+  /* Typography */
+  --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-h1: 24px;
+  --font-size-body: 14px;
+  --font-size-caption: 12px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Component Sizes */
+  --height-button: 48px;
+  --height-input: 44px;
+  --height-touch-target: 44px;
+
+  /* Cage Grid */
+  --cage-size-desktop: 60px;
+  --cage-size-tablet: 52px;
+  --cage-size-mobile: 44px;
+}
+```
+
+---
+
+## 9. 구현된 컴포넌트
+
+### 9.1 공통 컴포넌트 (`components/common/`)
+
+| 컴포넌트 | 파일 | 설명 |
+|----------|------|------|
+| Button | `Button.tsx` | Primary, Secondary, Ghost 버전, 로딩 상태, 비활성화 지원 |
+| Input | `Input.tsx` | 라벨, 에러 메시지, 비활성화 지원 |
+| Modal | `Modal.tsx` | 오버레이, 닫기 버튼, 크기 조절 (sm, md, lg) |
+| Toast | `Toast.tsx` | success, warning, error 타입, 3초 자동 사라짐 |
+
+### 9.2 케이지 컴포넌트 (`components/cages/`)
+
+| 컴포넌트 | 파일 | 설명 |
+|----------|------|------|
+| RackTabs | `RackTabs.tsx` | 랙 탭 전환, 가로 스크롤 (모바일 지원) |
+| CageGrid | `CageGrid.tsx` | 케이지 그리드 표시, 반응형 |
+| CageCell | `CageCell.tsx` | 개별 케이지 셀, 클릭 이벤트 |
+| ProfessorSelectModal | `ProfessorSelectModal.tsx` | 교수 선택 모달 |
+| ConfirmReleaseModal | `ConfirmReleaseModal.tsx` | 해제 확인 모달 |
+
+### 9.3 설정 컴포넌트 (`components/settings/`)
+
+| 컴포넌트 | 파일 | 설명 |
+|----------|------|------|
+| RackSettings | `RackSettings.tsx` | 랙 목록 및 CRUD |
+| RackFormModal | `RackFormModal.tsx` | 랙 추가/수정 폼 모달 |
+| ConfirmDeleteModal | `ConfirmDeleteModal.tsx` | 삭제 확인 모달 |
+
+---
+
+## 10. 모바일 최적화
+
+### 10.1 터치 친화적 설정
+
+```css
+.button {
+  touch-action: manipulation;  /* 더블탭 줌 방지 */
+  -webkit-tap-highlight-color: transparent;  /* 탭 하이라이트 제거 */
+  min-height: 44px;  /* 최소 터치 영역 */
+}
+```
+
+### 10.2 랙 탭 가로 스크롤
+
+```css
+.tabs {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;  /* 스크롤바 숨김 */
+}
+```

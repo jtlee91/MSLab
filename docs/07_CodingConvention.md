@@ -1,6 +1,6 @@
 # Coding Convention & AI Collaboration Guide
 
-> **문서 버전**: v1.0 | **작성일**: 2026-01-18
+> **문서 버전**: v1.1 | **작성일**: 2026-01-18 | **최종 수정**: 2026-01-18
 
 ---
 
@@ -23,16 +23,25 @@
 ```
 frontend/
 ├── src/
-│   ├── components/    # 재사용 UI 컴포넌트
-│   │   ├── common/    # Button, Input, Modal, Toast
-│   │   └── cage/      # CageGrid, CageCell
-│   ├── pages/         # 페이지 컴포넌트
-│   ├── hooks/         # 커스텀 훅
-│   ├── api/           # API 호출 함수
-│   ├── styles/        # 글로벌 CSS, 변수
-│   └── utils/         # 유틸리티 함수
-├── .env.example
-└── package.json
+│   ├── components/           # 재사용 UI 컴포넌트
+│   │   ├── common/           # Button, Input, Modal, Toast
+│   │   ├── cages/            # RackTabs, CageGrid, CageCell, ProfessorSelectModal, ConfirmReleaseModal
+│   │   ├── layout/           # AppLayout, Header, Sidebar
+│   │   └── settings/         # RackSettings, RackFormModal, ConfirmDeleteModal
+│   ├── pages/                # 페이지 컴포넌트
+│   │   ├── CagesPage.tsx     # 케이지 관리 (메인)
+│   │   ├── DashboardPage.tsx # 대시보드 (예정)
+│   │   └── SettingsPage.tsx  # 설정
+│   ├── hooks/                # 커스텀 훅
+│   │   └── useCageGrid.ts    # 케이지 그리드 상태 관리
+│   ├── services/             # API 호출 함수
+│   │   └── api.ts            # Axios 클라이언트 및 API 함수
+│   ├── types/                # TypeScript 타입 정의
+│   │   └── index.ts          # 전체 인터페이스 정의
+│   ├── index.css             # 글로벌 CSS (디자인 시스템 변수)
+│   └── main.tsx              # 앱 진입점
+├── package.json
+└── vite.config.ts
 ```
 
 ### 2.2 백엔드 (FastAPI)
@@ -40,18 +49,30 @@ frontend/
 ```
 backend/
 ├── app/
-│   ├── api/           # 라우터
-│   │   ├── auth.py
-│   │   ├── cages.py
-│   │   └── reports.py
-│   ├── models/        # SQLAlchemy 모델
-│   ├── schemas/       # Pydantic 스키마
-│   ├── services/      # 비즈니스 로직
-│   ├── core/          # 설정, 보안
-│   └── main.py
-├── alembic/           # 마이그레이션
-├── .env.example
-└── requirements.txt
+│   ├── api/
+│   │   └── routes/           # API 라우터
+│   │       ├── cages.py      # 케이지 배정/해제 API
+│   │       ├── racks.py      # 랙 CRUD API
+│   │       └── professors.py # 교수 조회 API
+│   ├── models/               # SQLAlchemy ORM 모델
+│   │   ├── base.py           # Base 클래스
+│   │   ├── user.py           # 사용자 모델
+│   │   ├── rack.py           # 랙 모델
+│   │   ├── cage.py           # 케이지 모델
+│   │   ├── professor.py      # 교수 모델
+│   │   └── assignment.py     # 배정 기록 모델
+│   ├── schemas/              # Pydantic 스키마
+│   │   ├── cage.py           # 케이지 관련 스키마
+│   │   ├── rack.py           # 랙 관련 스키마
+│   │   └── professor.py      # 교수 관련 스키마
+│   ├── config.py             # 설정 (환경 변수)
+│   ├── database.py           # DB 연결
+│   ├── seed.py               # 초기 데이터 시드
+│   └── main.py               # FastAPI 앱 진입점
+├── alembic/                  # DB 마이그레이션
+│   └── versions/             # 마이그레이션 스크립트
+├── pyproject.toml            # Python 의존성 (uv)
+└── mslab.db                  # SQLite 데이터베이스
 ```
 
 ---
@@ -70,26 +91,80 @@ backend/
 
 ```typescript
 // 컴포넌트: PascalCase, 함수형
-const CageCell: React.FC<CageCellProps> = ({ cage, onAssign }) => {
-  // ...
-};
+interface CageCellProps {
+  cage: Cage;
+  onClick: (cage: Cage) => void;
+}
+
+function CageCell({ cage, onClick }: CageCellProps) {
+  const handleClick = () => onClick(cage);
+  return <button onClick={handleClick}>...</button>;
+}
+
+// memo로 불필요한 리렌더링 방지
+export default memo(CageCell);
 
 // 훅: camelCase, use 접두사
-const useCageGrid = (rackId: number) => {
+function useCageGrid(initialRackId?: number) {
+  const [racks, setRacks] = useState<Rack[]>([]);
+  const [selectedRackId, setSelectedRackId] = useState<number | null>(null);
   // ...
-};
+  return { racks, selectedRackId, ... };
+}
 ```
 
 ### 3.3 Python/FastAPI
 
 ```python
-# 함수/변수: snake_case
-def assign_cage(cage_id: int, professor_id: int) -> CageResponse:
-    pass
+# 라우터: APIRouter 사용
+router = APIRouter(prefix="/cages", tags=["cages"])
 
-# 클래스: PascalCase
-class CageService:
-    pass
+# 엔드포인트: snake_case
+@router.post("/{cage_id}/assign", response_model=CageActionResponse)
+def assign_cage(
+    cage_id: int,
+    request: AssignRequest,
+    db: Session = Depends(get_db),
+):
+    # Optimistic Locking 검증
+    if cage.version != request.version:
+        raise HTTPException(status_code=409, detail="Version mismatch")
+    ...
+
+# Pydantic 스키마: PascalCase
+class CageResponse(BaseModel):
+    id: int
+    rack_id: int
+    position: str
+    version: int
+    current_professor: Optional[ProfessorInfo] = None
+
+    class Config:
+        from_attributes = True
+```
+
+### 3.4 CSS Modules
+
+```css
+/* 컴포넌트명.module.css */
+.container {
+  padding: var(--spacing-lg);
+}
+
+/* BEM 스타일 네이밍 */
+.cell { }
+.cell--empty { }
+.cell--assigned { }
+.cell__position { }
+.cell__professor { }
+
+/* 모바일 반응형 */
+@media (max-width: 640px) {
+  .cell {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
 ```
 
 ---

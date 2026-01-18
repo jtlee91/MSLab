@@ -1,8 +1,9 @@
 # TRD: 연구실 케이지 관리 서비스
 
-> **문서 버전**: v1.0  
+> **문서 버전**: v1.1  
 > **작성일**: 2026-01-18  
-> **상태**: 초안
+> **최종 수정**: 2026-01-18  
+> **상태**: 개발 진행 중
 
 ---
 
@@ -229,16 +230,73 @@
 
 ---
 
-## 7. 데이터 생명주기
+## 7. 구현된 API 엔드포인트
 
-### 7.1 수집 원칙
+### 7.1 랙 관리 API (`/api/racks`)
+
+| Method | Endpoint | 설명 | 요청 | 응답 |
+|--------|----------|------|------|------|
+| GET | `/api/racks` | 전체 랙 목록 조회 | - | `{ racks: [{ id, name, rows, columns, display_order, assigned_count }] }` |
+| GET | `/api/racks/{id}` | 특정 랙 조회 | - | `{ id, name, rows, columns, display_order }` |
+| POST | `/api/racks` | 새 랙 생성 (케이지 자동 생성) | `{ name, rows, columns, display_order }` | `{ success, message, rack }` |
+| PUT | `/api/racks/{id}` | 랙 수정 (크기 변경 포함) | `{ name?, rows?, columns?, display_order? }` | `{ success, message, rack }` |
+| DELETE | `/api/racks/{id}` | 랙 삭제 (빈 랙만 가능) | - | `{ success, message }` |
+
+**랙 크기 변경 규칙**:
+- 크기 확대: 항상 허용, 새 케이지 자동 생성
+- 크기 축소: 삭제될 영역에 배정된 케이지가 없을 때만 허용
+
+### 7.2 케이지 API (`/api/cages`)
+
+| Method | Endpoint | 설명 | 요청 | 응답 |
+|--------|----------|------|------|------|
+| GET | `/api/cages/rack/{rack_id}` | 랙별 케이지 그리드 조회 | - | `{ rack_id, rack_name, rows, columns, cages: [...] }` |
+| POST | `/api/cages/{id}/assign` | 케이지 배정 (Optimistic Locking) | `{ professor_id, version }` | `{ success, message, cage }` |
+| POST | `/api/cages/{id}/release` | 케이지 해제 (Optimistic Locking) | `{ version }` | `{ success, message, cage }` |
+
+**케이지 응답 구조**:
+```json
+{
+  "id": 1,
+  "rack_id": 1,
+  "position": "A1",
+  "row_index": 0,
+  "col_index": 0,
+  "version": 1,
+  "current_professor": { "id": 1, "name": "김교수", "color_code": "#3B82F6" }
+}
+```
+
+### 7.3 교수 API (`/api/professors`)
+
+| Method | Endpoint | 설명 | 요청 | 응답 |
+|--------|----------|------|------|------|
+| GET | `/api/professors` | 전체 교수 목록 | - | `{ professors: [...] }` |
+| GET | `/api/professors/{id}` | 특정 교수 조회 | - | `{ id, name, student_name, contact, color_code }` |
+
+> **Note**: 교수 CRUD (POST, PUT, DELETE)는 M3-4에서 구현 예정
+
+### 7.4 에러 응답 형식
+
+| HTTP 코드 | 상황 | 응답 |
+|-----------|------|------|
+| 400 | 잘못된 요청, 비즈니스 규칙 위반 | `{ "detail": "에러 메시지" }` |
+| 404 | 리소스 없음 | `{ "detail": "찾을 수 없습니다" }` |
+| 409 | 버전 충돌 (Optimistic Locking) | `{ "detail": "Version mismatch..." }` |
+| 500 | 서버 오류 | `{ "detail": "Internal Server Error" }` |
+
+---
+
+## 8. 데이터 생명주기
+
+### 8.1 수집 원칙
 
 | 원칙 | 설명 |
 |------|------|
 | **최소 수집** | 서비스 운영에 필수적인 정보만 수집 |
 | **목적 명시** | 수집 시 용도 명시 (케이지 관리, 과금) |
 
-### 7.2 보존 기간
+### 8.2 보존 기간
 
 | 데이터 유형 | 보존 기간 | 근거 |
 |-------------|-----------|------|
@@ -246,7 +304,7 @@
 | 사용자 계정 | 탈퇴 후 1년 | 분쟁 대응 |
 | 액세스 로그 | 90일 | 보안 감사 |
 
-### 7.3 삭제/익명화 경로
+### 8.3 삭제/익명화 경로
 
 | 단계 | 설명 |
 |------|------|
