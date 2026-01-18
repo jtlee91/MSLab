@@ -197,14 +197,23 @@
 
 ## M4: 2차 기능 (MVP 이후)
 
-### [] M4-1: FEAT-2 대시보드 API
+### [x] M4-1: FEAT-2 대시보드 API
 
 **사용자 스토리**: [01_PRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/01_PRD.md) US-2.1 ~ US-2.3
 
 **인수 조건**:
-- [ ] GET /api/dashboard/summary - 랙별 사용 현황
-- [ ] GET /api/dashboard/professors - 교수별 사용 현황
-- [ ] GET /api/dashboard/costs?period=daily|weekly|monthly - 비용 차트 데이터
+- [x] GET /api/dashboard/summary - 랙별 사용 현황
+- [x] GET /api/dashboard/professors - 교수별 사용 현황
+- [x] GET /api/dashboard/costs?period=daily|weekly|monthly - 비용 차트 데이터
+
+**구현 파일**:
+- `backend/app/api/routes/dashboard.py` - 대시보드 API 라우트
+- `backend/app/schemas/dashboard.py` - 응답 스키마 정의
+
+**API 응답 구조**:
+- `/summary`: 전체/랙별 케이지 사용 현황 (총 케이지, 사용 중, 사용 가능, 사용률)
+- `/professors`: 교수별 현재 사용 중인 케이지 수 (사용량 내림차순 정렬)
+- `/costs`: 기간별 비용 데이터 (daily: 7일, weekly: 4주, monthly: 90일)
 
 ---
 
