@@ -25,7 +25,7 @@
 
 ---
 
-### [] M0-2: 데이터베이스 스키마 생성
+### [x] M0-2: 데이터베이스 스키마 생성
 
 **컨텍스트**: SQLite 데이터베이스와 테이블을 생성합니다.
 
@@ -35,9 +35,9 @@
 - 참조: [04_DatabaseDesign.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/04_DatabaseDesign.md)
 
 **인수 조건**:
-- [ ] users, racks, professors, cages, assignments 모델 생성
-- [ ] 초기 마이그레이션 실행
-- [ ] Seed 데이터(기본 랙 3개, 관리자 계정) 생성
+- [x] users, racks, professors, cages, assignments 모델 생성
+- [x] 초기 마이그레이션 실행
+- [x] Seed 데이터(기본 랙 3개, 관리자 계정) 생성
 
 ---
 
