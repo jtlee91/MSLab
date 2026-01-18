@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import cages_router, dashboard_router, professors_router, racks_router
+from app.api.routes import cages_router, dashboard_router, professors_router, racks_router, reports_router
 from app.config import get_settings
 
 settings = get_settings()
@@ -28,6 +28,7 @@ app.include_router(racks_router, prefix="/api")
 app.include_router(cages_router, prefix="/api")
 app.include_router(professors_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
+app.include_router(reports_router, prefix="/api")
 
 
 @app.get("/health")

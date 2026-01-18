@@ -237,14 +237,22 @@
 
 ---
 
-### [] M4-3: FEAT-3 리포트 다운로드
+### [x] M4-3: FEAT-3 리포트 다운로드
 
 **사용자 스토리**: [01_PRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/01_PRD.md) US-3.1 ~ US-3.2
 
 **인수 조건**:
-- [ ] 기간 선택 UI
-- [ ] GET /api/reports/download?start=&end= - xlsx 생성 및 다운로드
-- [ ] xlsx 시트 구성: [요약], [상세]
+- [x] 기간 선택 UI (시작일/종료일 + 프리셋 버튼)
+- [x] GET /api/reports/download?start=&end= - xlsx 생성 및 다운로드
+- [x] xlsx 시트 구성: [요약], [상세]
+
+**구현 파일**:
+- `backend/app/api/routes/reports.py` - xlsx 생성 및 다운로드 API (openpyxl)
+- `frontend/src/components/dashboard/ReportDownload.tsx` - 기간 선택 및 다운로드 UI
+
+**xlsx 시트 구성**:
+- [요약] 시트: 교수명, 담당 학생, 사용 케이지 수, 총 비용, 합계
+- [상세] 시트: 날짜, 랙, 케이지 위치, 교수명, 담당 학생, 비용
 
 ---
 

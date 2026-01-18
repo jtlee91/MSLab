@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { dashboardApi } from "../services/api";
-import { SummaryCards, ProfessorUsageList } from "../components/dashboard";
+import { SummaryCards, ProfessorUsageList, ReportDownload } from "../components/dashboard";
 import type {
   DashboardSummaryResponse,
   DashboardProfessorsResponse,
@@ -79,6 +79,10 @@ export default function DashboardPage() {
 
       <div className={styles.section}>
         <ProfessorUsageList data={professors} />
+      </div>
+
+      <div className={styles.section}>
+        <ReportDownload />
       </div>
     </div>
   );

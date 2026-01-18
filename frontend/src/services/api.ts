@@ -161,4 +161,10 @@ export const dashboardApi = {
   },
 };
 
+export const reportApi = {
+  getDownloadUrl(startDate: string, endDate: string): string {
+    return `${API_BASE_URL}/api/reports/download?start=${startDate}&end=${endDate}`;
+  },
+};
+
 export type { ApiError as CageApiError };
