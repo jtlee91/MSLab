@@ -95,9 +95,20 @@
   background-color: var(--color-gray-50);
 }
 
-.table th:last-child,
-.table td:last-child {
-  width: 120px;
+.colName {
+  width: 25%;
+}
+
+.colSize {
+  width: 25%;
+}
+
+.colCages {
+  width: 30%;
+}
+
+.colActions {
+  width: 20%;
 }
 
 .table tbody tr:hover {

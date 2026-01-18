@@ -128,10 +128,10 @@ export default function RackSettings() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>이름</th>
-                <th>크기</th>
-                <th>케이지</th>
-                <th>작업</th>
+                <th className={styles.colName}>이름</th>
+                <th className={styles.colSize}>크기</th>
+                <th className={styles.colCages}>케이지</th>
+                <th className={styles.colActions}>작업</th>
               </tr>
             </thead>
             <tbody>
