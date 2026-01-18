@@ -41,6 +41,8 @@ erDiagram
         int id PK
         int rack_id FK
         string position
+        int row_index
+        int col_index
         int current_professor_id FK
         int version
     }
@@ -83,9 +85,9 @@ erDiagram
 |------|------|------|
 | id | INTEGER PK | 기본키 |
 | name | VARCHAR(100) | 교수 이름 |
-| student_name | VARCHAR(100) | 담당 학생 |
-| contact | VARCHAR(50) | 연락처 |
-| color_code | VARCHAR(7) | UI 색상 (HEX) |
+| student_name | VARCHAR(100) NULL | 담당 학생 |
+| contact | VARCHAR(50) NULL | 연락처 |
+| color_code | VARCHAR(7) DEFAULT '#3B82F6' | UI 색상 (HEX) |
 
 ### 2.4 cages
 | 컬럼 | 타입 | 설명 |
@@ -137,7 +139,7 @@ erDiagram
 | 엔티티 | 삭제 조건 |
 |--------|-----------|
 | **랙** | 배정된 케이지가 없을 때만 삭제 가능 |
-| **교수** | 배정된 케이지가 없을 때만 삭제 가능 (예정) |
+| **교수** | 배정된 케이지가 없을 때만 삭제 가능 |
 | **케이지** | 랙과 함께 cascade 삭제 |
 
 ---

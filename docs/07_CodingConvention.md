@@ -24,22 +24,24 @@
 frontend/
 ├── src/
 │   ├── components/           # 재사용 UI 컴포넌트
-│   │   ├── common/           # Button, Input, Modal, Toast
+│   │   ├── common/           # Button, Input, Modal, Toast (공통)
 │   │   ├── cages/            # RackTabs, CageGrid, CageCell, ProfessorSelectModal, ConfirmReleaseModal
+│   │   ├── dashboard/        # SummaryCards, ProfessorUsageList, CostChart, ReportDownload
 │   │   ├── layout/           # AppLayout, Header, Sidebar
-│   │   └── settings/         # RackSettings, RackFormModal, ConfirmDeleteModal
+│   │   └── settings/         # RackSettings, RackFormModal, ProfessorSettings, ProfessorFormModal, ConfirmDeleteModal
 │   ├── pages/                # 페이지 컴포넌트
 │   │   ├── CagesPage.tsx     # 케이지 관리 (메인)
-│   │   ├── DashboardPage.tsx # 대시보드 (예정)
-│   │   └── SettingsPage.tsx  # 설정
+│   │   ├── DashboardPage.tsx # 대시보드
+│   │   └── SettingsPage.tsx  # 설정 (랙/교수 관리)
 │   ├── hooks/                # 커스텀 훅
-│   │   └── useCageGrid.ts    # 케이지 그리드 상태 관리
+│   │   └── useCageGrid.ts    # 케이지 그리드 상태 관리 (4초 폴링)
 │   ├── services/             # API 호출 함수
-│   │   └── api.ts            # Axios 클라이언트 및 API 함수
+│   │   └── api.ts            # rackApi, cageApi, professorApi, dashboardApi, reportApi
 │   ├── types/                # TypeScript 타입 정의
 │   │   └── index.ts          # 전체 인터페이스 정의
 │   ├── index.css             # 글로벌 CSS (디자인 시스템 변수)
-│   └── main.tsx              # 앱 진입점
+│   ├── App.tsx               # 앱 진입점 (라우터 설정)
+│   └── main.tsx              # React 렌더링
 ├── package.json
 └── vite.config.ts
 ```
@@ -53,25 +55,29 @@ backend/
 │   │   └── routes/           # API 라우터
 │   │       ├── cages.py      # 케이지 배정/해제 API
 │   │       ├── racks.py      # 랙 CRUD API
-│   │       └── professors.py # 교수 조회 API
+│   │       ├── professors.py # 교수 CRUD API
+│   │       ├── dashboard.py  # 대시보드 API (summary, professors, costs)
+│   │       └── reports.py    # xlsx 다운로드 API
 │   ├── models/               # SQLAlchemy ORM 모델
-│   │   ├── base.py           # Base 클래스
+│   │   ├── base.py           # TimestampMixin
 │   │   ├── user.py           # 사용자 모델
 │   │   ├── rack.py           # 랙 모델
 │   │   ├── cage.py           # 케이지 모델
 │   │   ├── professor.py      # 교수 모델
 │   │   └── assignment.py     # 배정 기록 모델
 │   ├── schemas/              # Pydantic 스키마
-│   │   ├── cage.py           # 케이지 관련 스키마
-│   │   ├── rack.py           # 랙 관련 스키마
-│   │   └── professor.py      # 교수 관련 스키마
+│   │   ├── cage.py           # 케이지 관련 스키마 (CageResponse, AssignRequest, etc.)
+│   │   ├── rack.py           # 랙 관련 스키마 (RackCreate, RackUpdate, etc.)
+│   │   ├── professor.py      # 교수 관련 스키마 (ProfessorCreate, ProfessorUpdate, etc.)
+│   │   └── dashboard.py      # 대시보드 스키마 (RackSummary, ProfessorUsage, DailyCost, etc.)
 │   ├── config.py             # 설정 (환경 변수)
 │   ├── database.py           # DB 연결
 │   ├── seed.py               # 초기 데이터 시드
-│   └── main.py               # FastAPI 앱 진입점
+│   └── main.py               # FastAPI 앱 진입점 (/api 프리픽스)
 ├── alembic/                  # DB 마이그레이션
 │   └── versions/             # 마이그레이션 스크립트
 ├── pyproject.toml            # Python 의존성 (uv)
+├── start.sh                  # 시작 스크립트
 └── mslab.db                  # SQLite 데이터베이스
 ```
 

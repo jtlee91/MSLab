@@ -271,12 +271,40 @@
 
 | Method | Endpoint | 설명 | 요청 | 응답 |
 |--------|----------|------|------|------|
-| GET | `/api/professors` | 전체 교수 목록 | - | `{ professors: [...] }` |
-| GET | `/api/professors/{id}` | 특정 교수 조회 | - | `{ id, name, student_name, contact, color_code }` |
+| GET | `/api/professors` | 전체 교수 목록 (배정 케이지 수 포함) | - | `{ professors: [{ id, name, student_name, contact, color_code, assigned_count }] }` |
+| GET | `/api/professors/{id}` | 특정 교수 조회 | - | `{ id, name, student_name, contact, color_code, assigned_count }` |
+| POST | `/api/professors` | 새 교수 등록 | `{ name, student_name?, contact?, color_code? }` | `{ success, message, professor }` |
+| PUT | `/api/professors/{id}` | 교수 수정 | `{ name?, student_name?, contact?, color_code? }` | `{ success, message, professor }` |
+| DELETE | `/api/professors/{id}` | 교수 삭제 (배정된 케이지 없을 때만) | - | `{ success, message }` |
 
-> **Note**: 교수 CRUD (POST, PUT, DELETE)는 M3-4에서 구현 예정
+**교수 삭제 규칙**:
+- 현재 배정된 케이지가 있는 교수는 삭제 불가
+- 삭제 시도 시 400 에러 반환: "배정된 케이지가 있어 삭제할 수 없습니다"
 
-### 7.4 에러 응답 형식
+### 7.4 대시보드 API (`/api/dashboard`)
+
+| Method | Endpoint | 설명 | 요청 | 응답 |
+|--------|----------|------|------|------|
+| GET | `/api/dashboard/summary` | 랙별 사용 현황 요약 | - | `{ total_racks, total_cages, total_used, total_available, overall_usage_rate, racks: [...] }` |
+| GET | `/api/dashboard/professors` | 교수별 케이지 사용 현황 | - | `{ professors: [{ professor_id, professor_name, color_code, cage_count }] }` |
+| GET | `/api/dashboard/costs?period=` | 기간별 비용 데이터 | `period: daily|weekly|monthly` | `{ period, start_date, end_date, total_cost, daily_costs, professor_summaries }` |
+
+**기간 설정**:
+- `daily`: 최근 7일
+- `weekly`: 최근 4주 (기본값)
+- `monthly`: 최근 90일
+
+### 7.5 리포트 API (`/api/reports`)
+
+| Method | Endpoint | 설명 | 요청 | 응답 |
+|--------|----------|------|------|------|
+| GET | `/api/reports/download?start=&end=` | xlsx 다운로드 | `start: YYYY-MM-DD, end: YYYY-MM-DD` | xlsx 파일 스트림 |
+
+**xlsx 구성**:
+- [요약] 시트: 교수명, 담당 학생, 사용 케이지 수, 총 비용, 합계
+- [상세] 시트: 날짜, 랙, 케이지 위치, 교수명, 담당 학생, 비용 (800원/일)
+
+### 7.6 에러 응답 형식
 
 | HTTP 코드 | 상황 | 응답 |
 |-----------|------|------|

@@ -175,22 +175,41 @@ font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Semantic Colors */
   --color-success: #10B981;
+  --color-success-light: #D1FAE5;
   --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
   --color-error: #EF4444;
+  --color-error-light: #FEE2E2;
   --color-info: #0EA5E9;
+  --color-info-light: #E0F2FE;
 
   /* Neutral Colors */
   --color-gray-900: #111827;
+  --color-gray-700: #374151;
   --color-gray-500: #6B7280;
+  --color-gray-400: #9CA3AF;
+  --color-gray-300: #D1D5DB;
   --color-gray-200: #E5E7EB;
+  --color-gray-100: #F3F4F6;
   --color-gray-50: #F9FAFB;
   --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-overlay: rgba(0, 0, 0, 0.5);
 
   /* Typography */
-  --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-size-h1: 24px;
+  --font-size-h2: 20px;
+  --font-size-h3: 16px;
   --font-size-body: 14px;
   --font-size-caption: 12px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.3;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.5;
 
   /* Spacing */
   --spacing-xs: 4px;
@@ -203,15 +222,24 @@ font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* Z-Index Scale */
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-toast: 300;
 
   /* Component Sizes */
   --height-button: 48px;
@@ -237,6 +265,7 @@ font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 | Input | `Input.tsx` | 라벨, 에러 메시지, 비활성화 지원 |
 | Modal | `Modal.tsx` | 오버레이, 닫기 버튼, 크기 조절 (sm, md, lg) |
 | Toast | `Toast.tsx` | success, warning, error 타입, 3초 자동 사라짐 |
+| ToastProvider | `Toast.tsx` | 앱 전역 Toast 컨텍스트 제공 |
 
 ### 9.2 케이지 컴포넌트 (`components/cages/`)
 
@@ -248,7 +277,16 @@ font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 | ProfessorSelectModal | `ProfessorSelectModal.tsx` | 교수 선택 모달 |
 | ConfirmReleaseModal | `ConfirmReleaseModal.tsx` | 해제 확인 모달 |
 
-### 9.3 설정 컴포넌트 (`components/settings/`)
+### 9.3 대시보드 컴포넌트 (`components/dashboard/`)
+
+| 컴포넌트 | 파일 | 설명 |
+|----------|------|------|
+| SummaryCards | `SummaryCards.tsx` | 전체/랙별 케이지 현황 카드 |
+| ProfessorUsageList | `ProfessorUsageList.tsx` | 교수별 사용 현황 리스트 |
+| CostChart | `CostChart.tsx` | 일/주/월별 비용 차트 (Recharts) |
+| ReportDownload | `ReportDownload.tsx` | 기간 선택 및 xlsx 다운로드 UI |
+
+### 9.4 설정 컴포넌트 (`components/settings/`)
 
 | 컴포넌트 | 파일 | 설명 |
 |----------|------|------|
