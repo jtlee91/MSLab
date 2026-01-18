@@ -1,0 +1,19 @@
+app = "mslab-api"
+primary_region = "nrt"  # Tokyo (closest to Korea)
+
+[build]
+
+[env]
+  DATABASE_URL = "sqlite:////data/mslab.db"
+  CORS_ORIGINS = "https://ms-lab.vercel.app,http://localhost:5173"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[mounts]
+  source = "mslab_data"
+  destination = "/data"
