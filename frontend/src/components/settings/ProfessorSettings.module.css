@@ -102,6 +102,13 @@
   color: var(--color-gray-900);
 }
 
+.nameWithBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
 .optionalCell {
   color: var(--color-gray-700);
 }

@@ -130,7 +130,6 @@ export default function ProfessorSettings() {
                 <th>이름</th>
                 <th>담당 학생</th>
                 <th>연락처</th>
-                <th>케이지</th>
                 <th>작업</th>
               </tr>
             </thead>
@@ -147,21 +146,21 @@ export default function ProfessorSettings() {
                         title={professor.color_code}
                       />
                     </td>
-                    <td className={styles.nameCell}>{professor.name}</td>
+                    <td className={styles.nameCell}>
+                      <span className={styles.nameWithBadge}>
+                        {professor.name}
+                        {hasAssigned && (
+                          <span className={styles.assignedBadge}>
+                            {professor.assigned_count}개 사용중
+                          </span>
+                        )}
+                      </span>
+                    </td>
                     <td className={styles.optionalCell}>
                       {professor.student_name || <span className={styles.emptyValue}>-</span>}
                     </td>
                     <td className={styles.optionalCell}>
                       {professor.contact || <span className={styles.emptyValue}>-</span>}
-                    </td>
-                    <td>
-                      {hasAssigned ? (
-                        <span className={styles.assignedBadge}>
-                          {professor.assigned_count}개 사용중
-                        </span>
-                      ) : (
-                        <span className={styles.emptyValue}>-</span>
-                      )}
                     </td>
                     <td className={styles.actionsCell}>
                       <Button variant="ghost" size="small" onClick={() => handleEditClick(professor)}>
