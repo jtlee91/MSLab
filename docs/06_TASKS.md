@@ -57,15 +57,15 @@
 
 ---
 
-### [] M1-2: 공통 컴포넌트 생성
+### [x] M1-2: 공통 컴포넌트 생성
 
 **컨텍스트**: 버튼, 입력필드, 토스트, 모달 등 재사용 컴포넌트를 만듭니다.
 
 **인수 조건**:
-- [ ] Button 컴포넌트 (Primary, Secondary, Ghost)
-- [ ] Input 컴포넌트
-- [ ] Toast 컴포넌트 (성공, 경고, 오류)
-- [ ] Modal 컴포넌트
+- [x] Button 컴포넌트 (Primary, Secondary, Ghost)
+- [x] Input 컴포넌트
+- [x] Toast 컴포넌트 (성공, 경고, 오류)
+- [x] Modal 컴포넌트
 
 ---
 
