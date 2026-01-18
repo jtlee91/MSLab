@@ -101,11 +101,12 @@ export function CostChart({ data, period, onPeriodChange }: CostChartProps) {
                   tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
                 />
                 <Tooltip
-                  formatter={(value: number, name: string) => {
+                  formatter={(value, name) => {
+                    const numValue = typeof value === "number" ? value : 0;
                     const professor = data.professor_summaries.find(
                       (p) => `professor_${p.professor_id}` === name
                     );
-                    return [formatCost(value), professor?.professor_name || name];
+                    return [formatCost(numValue), professor?.professor_name || String(name)];
                   }}
                   labelFormatter={(label) => `날짜: ${label}`}
                   contentStyle={{

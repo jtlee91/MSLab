@@ -3,8 +3,8 @@ import {
     useContext,
     useState,
     useCallback,
-    ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 import styles from './Toast.module.css';
 
 export type ToastType = 'success' | 'warning' | 'error' | 'info';
