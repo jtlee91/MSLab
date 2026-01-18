@@ -111,7 +111,7 @@
 
 ## M3: 핵심 기능 개발 (MVP)
 
-### [] M3-1: FEAT-1 케이지 그리드 API
+### [x] M3-1: FEAT-1 케이지 그리드 API
 
 **사용자 스토리**: [01_PRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/01_PRD.md) US-1.1 ~ US-1.3
 
@@ -120,11 +120,11 @@
 - 참조: [02_TRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/02_TRD.md) 동시성 처리 섹션
 
 **인수 조건**:
-- [ ] GET /api/racks - 랙 목록
-- [ ] GET /api/racks/{id}/cages - 케이지 그리드
-- [ ] POST /api/cages/{id}/assign - 배정 (version 검증)
-- [ ] POST /api/cages/{id}/release - 해제 (version 검증)
-- [ ] 409 Conflict 응답 시 충돌 처리
+- [x] GET /api/racks - 랙 목록
+- [x] GET /api/racks/{id}/cages - 케이지 그리드
+- [x] POST /api/cages/{id}/assign - 배정 (version 검증)
+- [x] POST /api/cages/{id}/release - 해제 (version 검증)
+- [x] 409 Conflict 응답 시 충돌 처리
 
 ---
 
