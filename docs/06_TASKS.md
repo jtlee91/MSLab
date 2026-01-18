@@ -172,15 +172,26 @@
 
 ---
 
-### [] M3-4: 설정 - 교수 관리
+### [x] M3-4: 설정 - 교수 관리
 
 **사용자 스토리**: [01_PRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/01_PRD.md) US-1.5
 
 **인수 조건**:
-- [ ] 교수 목록 조회
-- [ ] 교수 추가 (이름, 담당학생, 연락처, 색상)
-- [ ] 교수 수정
-- [ ] 교수 삭제 (배정 케이지 없을 때만)
+- [x] 교수 목록 조회 (`GET /api/professors` - 사용 중 케이지 수 포함)
+- [x] 교수 추가 (이름, 담당학생, 연락처, 색상) - 8가지 프리셋 + 커스텀 색상
+- [x] 교수 수정
+- [x] 교수 삭제 (케이지 배정 없을 때만 - UI에서 삭제 버튼 비활성화)
+
+**구현 파일**:
+- `backend/app/api/routes/professors.py` - CRUD API
+- `backend/app/schemas/professor.py` - ProfessorUpdate, ProfessorActionResponse 스키마
+- `frontend/src/components/settings/ProfessorSettings.tsx` - 메인 UI
+- `frontend/src/components/settings/ProfessorFormModal.tsx` - 추가/수정 모달
+
+**추가 구현 사항**:
+- 교수별 사용 중 케이지 수 표시 (뱃지)
+- 케이지가 배정된 교수는 삭제 버튼 비활성화
+- 8가지 프리셋 색상 및 커스텀 색상 선택 지원
 
 ---
 
