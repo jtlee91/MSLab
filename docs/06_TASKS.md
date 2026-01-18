@@ -217,12 +217,23 @@
 
 ---
 
-### [] M4-2: FEAT-2 대시보드 UI
+### [x] M4-2: FEAT-2 대시보드 UI
 
 **인수 조건**:
-- [ ] 랙별 사용/미사용 카드
-- [ ] 교수별 사용 케이지 수 리스트
-- [ ] 일/주/월 비용 차트 (Chart.js 또는 Recharts)
+- [x] 랙별 사용/미사용 카드
+- [x] 교수별 사용 케이지 수 리스트
+- [x] 일/주/월 비용 차트 (Recharts)
+
+**구현 파일**:
+- `frontend/src/pages/DashboardPage.tsx` - 대시보드 메인 페이지
+- `frontend/src/components/dashboard/SummaryCards.tsx` - 요약 카드 및 랙별 현황
+- `frontend/src/components/dashboard/ProfessorUsageList.tsx` - 교수별 사용 현황
+- `frontend/src/components/dashboard/CostChart.tsx` - 비용 차트 (Recharts)
+
+**UI 구성**:
+- 상단: 전체 케이지/사용 중/빈 케이지/오늘 비용 요약 카드
+- 중단: 랙별 현황 카드 (사용률 프로그레스 바)
+- 하단: 교수별 사용 현황 (가로 막대), 비용 차트 (기간별 누적 막대)
 
 ---
 

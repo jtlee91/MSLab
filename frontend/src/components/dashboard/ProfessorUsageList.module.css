@@ -1,0 +1,113 @@
+.container {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.title {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-50);
+  transition: background-color var(--transition-fast);
+}
+
+.item:hover {
+  background-color: var(--color-gray-100);
+}
+
+.colorDot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.professorName {
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-900);
+}
+
+.cageCount {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.countValue {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h3);
+  color: var(--color-primary);
+}
+
+.countLabel {
+  font-size: var(--font-size-caption);
+  color: var(--color-gray-500);
+}
+
+.empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-gray-500);
+}
+
+.barContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.bar {
+  height: 24px;
+  border-radius: var(--radius-sm);
+  min-width: 4px;
+  transition: width var(--transition-normal);
+}
+
+.barLabel {
+  font-size: var(--font-size-caption);
+  color: var(--color-gray-500);
+  min-width: 50px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .item {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .barContainer {
+    width: 100%;
+    order: 3;
+  }
+}

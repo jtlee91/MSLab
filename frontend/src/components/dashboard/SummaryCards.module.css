@@ -1,0 +1,157 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.iconTotal {
+  background-color: var(--color-primary-light);
+}
+
+.iconUsed {
+  background-color: var(--color-success-light);
+}
+
+.iconAvailable {
+  background-color: var(--color-gray-100);
+}
+
+.iconCost {
+  background-color: var(--color-warning-light);
+}
+
+.label {
+  font-size: var(--font-size-caption);
+  color: var(--color-gray-500);
+  font-weight: var(--font-weight-medium);
+}
+
+.value {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-xs);
+}
+
+.subValue {
+  font-size: var(--font-size-caption);
+  color: var(--color-gray-500);
+}
+
+.rackGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.rackCard {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.rackName {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-md);
+}
+
+.rackStats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-body);
+}
+
+.statLabel {
+  color: var(--color-gray-500);
+}
+
+.statValue {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-900);
+}
+
+.progressBar {
+  height: 8px;
+  background-color: var(--color-gray-100);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: var(--spacing-sm);
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-normal);
+}
+
+.progressLow {
+  background-color: var(--color-success);
+}
+
+.progressMedium {
+  background-color: var(--color-warning);
+}
+
+.progressHigh {
+  background-color: var(--color-error);
+}
+
+@media (max-width: 640px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    padding: var(--spacing-md);
+  }
+
+  .value {
+    font-size: var(--font-size-h2);
+  }
+
+  .rackGrid {
+    grid-template-columns: 1fr;
+  }
+}

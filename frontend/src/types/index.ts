@@ -108,3 +108,61 @@ export interface ApiError {
   message: string;
   isConflict: boolean;
 }
+
+export interface RackSummary {
+  rack_id: number;
+  rack_name: string;
+  total_cages: number;
+  used_cages: number;
+  available_cages: number;
+  usage_rate: number;
+}
+
+export interface DashboardSummaryResponse {
+  total_racks: number;
+  total_cages: number;
+  total_used: number;
+  total_available: number;
+  overall_usage_rate: number;
+  racks: RackSummary[];
+}
+
+export interface ProfessorUsage {
+  professor_id: number;
+  professor_name: string;
+  color_code: string;
+  cage_count: number;
+}
+
+export interface DashboardProfessorsResponse {
+  professors: ProfessorUsage[];
+}
+
+export interface DailyCost {
+  date: string;
+  professor_id: number;
+  professor_name: string;
+  color_code: string;
+  cage_count: number;
+  cost: number;
+}
+
+export interface ProfessorCostSummary {
+  professor_id: number;
+  professor_name: string;
+  color_code: string;
+  total_cage_days: number;
+  total_cost: number;
+}
+
+export interface DashboardCostsResponse {
+  period: string;
+  start_date: string;
+  end_date: string;
+  cost_per_cage_day: number;
+  total_cost: number;
+  daily_costs: DailyCost[];
+  professor_summaries: ProfessorCostSummary[];
+}
+
+export type CostPeriod = "daily" | "weekly" | "monthly";

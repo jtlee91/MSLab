@@ -1,48 +1,108 @@
+import { useState, useEffect, useCallback } from "react";
+import { dashboardApi } from "../services/api";
+import { SummaryCards, ProfessorUsageList, CostChart } from "../components/dashboard";
+import type {
+  DashboardSummaryResponse,
+  DashboardProfessorsResponse,
+  DashboardCostsResponse,
+  CostPeriod,
+} from "../types";
+import styles from "./DashboardPage.module.css";
+
 export default function DashboardPage() {
+  const [summary, setSummary] = useState<DashboardSummaryResponse | null>(null);
+  const [professors, setProfessors] = useState<DashboardProfessorsResponse | null>(null);
+  const [costs, setCosts] = useState<DashboardCostsResponse | null>(null);
+  const [period, setPeriod] = useState<CostPeriod>("weekly");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [summaryData, professorsData, costsData] = await Promise.all([
+        dashboardApi.getSummary(),
+        dashboardApi.getProfessors(),
+        dashboardApi.getCosts(period),
+      ]);
+
+      setSummary(summaryData);
+      setProfessors(professorsData);
+      setCosts(costsData);
+    } catch (err) {
+      console.error("Failed to fetch dashboard data:", err);
+      setError("데이터를 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  }, [period]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handlePeriodChange = async (newPeriod: CostPeriod) => {
+    setPeriod(newPeriod);
+    try {
+      const costsData = await dashboardApi.getCosts(newPeriod);
+      setCosts(costsData);
+    } catch (err) {
+      console.error("Failed to fetch costs:", err);
+    }
+  };
+
+  const calculateTodayCost = () => {
+    if (!costs) return 0;
+    const today = new Date().toISOString().split("T")[0];
+    return costs.daily_costs
+      .filter((c) => c.date === today)
+      .reduce((sum, c) => sum + c.cost, 0);
+  };
+
+  if (loading) {
     return (
-        <div>
-            <h1 style={{ marginBottom: 'var(--spacing-lg)' }}>대시보드</h1>
-
-            {/* Summary Cards */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: 'var(--spacing-md)',
-                marginBottom: 'var(--spacing-xl)'
-            }}>
-                {[
-                    { label: '전체 케이지', value: '192', icon: '📦' },
-                    { label: '사용 중', value: '67', icon: '✅' },
-                    { label: '빈 케이지', value: '125', icon: '⬜' },
-                    { label: '오늘 비용', value: '53,600원', icon: '💰' },
-                ].map((card) => (
-                    <div
-                        key={card.label}
-                        style={{
-                            backgroundColor: 'var(--color-white)',
-                            borderRadius: 'var(--radius-lg)',
-                            padding: 'var(--spacing-lg)',
-                            boxShadow: 'var(--shadow-sm)'
-                        }}
-                    >
-                        <div style={{ fontSize: '24px', marginBottom: 'var(--spacing-sm)' }}>{card.icon}</div>
-                        <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-gray-500)' }}>{card.label}</div>
-                        <div style={{ fontSize: 'var(--font-size-h2)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-gray-900)' }}>{card.value}</div>
-                    </div>
-                ))}
-            </div>
-
-            <div style={{
-                backgroundColor: 'var(--color-white)',
-                borderRadius: 'var(--radius-lg)',
-                padding: 'var(--spacing-xl)',
-                boxShadow: 'var(--shadow-sm)'
-            }}>
-                <h3 style={{ marginBottom: 'var(--spacing-md)' }}>교수별 사용 현황</h3>
-                <p style={{ color: 'var(--color-gray-500)' }}>
-                    차트가 여기에 표시됩니다.
-                </p>
-            </div>
+      <div className={styles.container}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner} />
+          <span className={styles.loadingText}>데이터를 불러오는 중...</span>
         </div>
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.errorContainer}>
+          <span className={styles.errorIcon}>⚠️</span>
+          <span className={styles.errorMessage}>{error}</span>
+          <button className={styles.retryButton} onClick={fetchData}>
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>대시보드</h1>
+      </div>
+
+      <div className={styles.section}>
+        <SummaryCards data={summary} todayCost={calculateTodayCost()} />
+      </div>
+
+      <div className={styles.section}>
+        <ProfessorUsageList data={professors} />
+      </div>
+
+      <div className={styles.section}>
+        <CostChart data={costs} period={period} onPeriodChange={handlePeriodChange} />
+      </div>
+    </div>
+  );
 }

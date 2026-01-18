@@ -12,6 +12,10 @@ import type {
   ProfessorUpdate,
   AssignRequest,
   ReleaseRequest,
+  DashboardSummaryResponse,
+  DashboardProfessorsResponse,
+  DashboardCostsResponse,
+  CostPeriod,
 } from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -137,6 +141,23 @@ export const cageApi = {
     } catch (error) {
       throw handleApiError(error);
     }
+  },
+};
+
+export const dashboardApi = {
+  async getSummary(): Promise<DashboardSummaryResponse> {
+    const response = await apiClient.get<DashboardSummaryResponse>("/dashboard/summary");
+    return response.data;
+  },
+
+  async getProfessors(): Promise<DashboardProfessorsResponse> {
+    const response = await apiClient.get<DashboardProfessorsResponse>("/dashboard/professors");
+    return response.data;
+  },
+
+  async getCosts(period: CostPeriod = "weekly"): Promise<DashboardCostsResponse> {
+    const response = await apiClient.get<DashboardCostsResponse>(`/dashboard/costs?period=${period}`);
+    return response.data;
   },
 };
 
