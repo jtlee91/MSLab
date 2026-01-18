@@ -131,7 +131,7 @@ export default function RackSettings() {
                 <th className={styles.colName}>이름</th>
                 <th className={styles.colSize}>크기</th>
                 <th className={styles.colCages}>케이지</th>
-                <th className={styles.colActions}>작업</th>
+                <th className={styles.colActions}></th>
               </tr>
             </thead>
             <tbody>

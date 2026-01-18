@@ -130,7 +130,7 @@ export default function ProfessorSettings() {
                 <th>이름</th>
                 <th>담당 학생</th>
                 <th>연락처</th>
-                <th>작업</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
