@@ -42,6 +42,26 @@ export interface RackListResponse {
   racks: Rack[];
 }
 
+export interface RackCreate {
+  name: string;
+  rows: number;
+  columns: number;
+  display_order?: number;
+}
+
+export interface RackUpdate {
+  name?: string;
+  rows?: number;
+  columns?: number;
+  display_order?: number;
+}
+
+export interface RackActionResponse {
+  success: boolean;
+  message: string;
+  rack: Rack | null;
+}
+
 export interface ProfessorListResponse {
   professors: Professor[];
 }

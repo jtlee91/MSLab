@@ -1,0 +1,20 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  text-align: center;
+}
+
+.message {
+  font-size: var(--font-size-body);
+  color: var(--color-gray-700);
+}
+
+.message strong {
+  color: var(--color-gray-900);
+}
+
+.warning {
+  font-size: var(--font-size-caption);
+  color: var(--color-error);
+}

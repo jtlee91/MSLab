@@ -3,6 +3,9 @@ import type {
   CageGridResponse,
   CageActionResponse,
   RackListResponse,
+  RackActionResponse,
+  RackCreate,
+  RackUpdate,
   ProfessorListResponse,
   AssignRequest,
   ReleaseRequest,
@@ -45,6 +48,33 @@ export const rackApi = {
   async getRacks(): Promise<RackListResponse> {
     const response = await apiClient.get<RackListResponse>("/racks");
     return response.data;
+  },
+
+  async createRack(data: RackCreate): Promise<RackActionResponse> {
+    try {
+      const response = await apiClient.post<RackActionResponse>("/racks", data);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+
+  async updateRack(rackId: number, data: RackUpdate): Promise<RackActionResponse> {
+    try {
+      const response = await apiClient.put<RackActionResponse>(`/racks/${rackId}`, data);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+
+  async deleteRack(rackId: number): Promise<RackActionResponse> {
+    try {
+      const response = await apiClient.delete<RackActionResponse>(`/racks/${rackId}`);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
   },
 };
 

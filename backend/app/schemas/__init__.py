@@ -14,9 +14,11 @@ from app.schemas.professor import (
     ProfessorResponse,
 )
 from app.schemas.rack import (
+    RackActionResponse,
     RackCreate,
     RackListResponse,
     RackResponse,
+    RackUpdate,
 )
 
 __all__ = [
@@ -28,8 +30,10 @@ __all__ = [
     "ProfessorInfo",
     "ProfessorListResponse",
     "ProfessorResponse",
+    "RackActionResponse",
     "RackCreate",
     "RackListResponse",
     "RackResponse",
+    "RackUpdate",
     "ReleaseRequest",
 ]
