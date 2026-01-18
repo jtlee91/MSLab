@@ -1,71 +1,149 @@
+import { useState, useCallback } from "react";
+import {
+  CageGrid,
+  RackTabs,
+  ProfessorSelectModal,
+  ConfirmReleaseModal,
+} from "../components/cages";
+import { useToast } from "../components/common";
+import { useCageGrid } from "../hooks/useCageGrid";
+import type { Cage, Professor } from "../types";
+import styles from "./CagesPage.module.css";
+
 export default function CagesPage() {
+  const {
+    racks,
+    selectedRackId,
+    gridData,
+    professors,
+    loading,
+    error,
+    selectRack,
+    assignCage,
+    releaseCage,
+  } = useCageGrid();
+
+  const { showToast } = useToast();
+
+  const [selectedCage, setSelectedCage] = useState<Cage | null>(null);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showReleaseModal, setShowReleaseModal] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const handleCageDoubleClick = useCallback((cage: Cage) => {
+    setSelectedCage(cage);
+    if (cage.current_professor) {
+      setShowReleaseModal(true);
+    } else {
+      setShowAssignModal(true);
+    }
+  }, []);
+
+  const handleCloseModals = useCallback(() => {
+    setShowAssignModal(false);
+    setShowReleaseModal(false);
+    setSelectedCage(null);
+  }, []);
+
+  const handleProfessorSelect = useCallback(
+    async (professor: Professor) => {
+      if (!selectedCage) return;
+
+      setActionLoading(true);
+      const result = await assignCage(selectedCage, professor.id);
+      setActionLoading(false);
+
+      if (result.success) {
+        showToast("success", `${selectedCage.position}이(가) ${professor.name}에게 배정되었습니다`);
+        handleCloseModals();
+      } else if (result.error?.isConflict) {
+        showToast("warning", "다른 사용자가 이 케이지를 수정했습니다. 최신 데이터를 불러왔습니다.");
+        handleCloseModals();
+      } else {
+        showToast("error", result.error?.message || "배정에 실패했습니다");
+      }
+    },
+    [selectedCage, assignCage, showToast, handleCloseModals]
+  );
+
+  const handleReleaseConfirm = useCallback(async () => {
+    if (!selectedCage) return;
+
+    setActionLoading(true);
+    const result = await releaseCage(selectedCage);
+    setActionLoading(false);
+
+    if (result.success) {
+      showToast("success", `${selectedCage.position} 케이지가 해제되었습니다`);
+      handleCloseModals();
+    } else if (result.error?.isConflict) {
+      showToast("warning", "다른 사용자가 이 케이지를 수정했습니다. 최신 데이터를 불러왔습니다.");
+      handleCloseModals();
+    } else {
+      showToast("error", result.error?.message || "해제에 실패했습니다");
+    }
+  }, [selectedCage, releaseCage, showToast, handleCloseModals]);
+
+  if (loading && !gridData) {
     return (
-        <div>
-            <h1 style={{ marginBottom: 'var(--spacing-lg)' }}>케이지 관리</h1>
-
-            <div style={{
-                backgroundColor: 'var(--color-white)',
-                borderRadius: 'var(--radius-lg)',
-                padding: 'var(--spacing-xl)',
-                boxShadow: 'var(--shadow-sm)'
-            }}>
-                <p style={{ color: 'var(--color-gray-500)' }}>
-                    케이지 그리드가 여기에 표시됩니다.
-                </p>
-
-                {/* Rack Tabs Placeholder */}
-                <div style={{
-                    display: 'flex',
-                    gap: 'var(--spacing-sm)',
-                    marginTop: 'var(--spacing-lg)',
-                    borderBottom: '1px solid var(--color-gray-200)',
-                    paddingBottom: 'var(--spacing-sm)'
-                }}>
-                    {['랙1', '랙2', '랙3'].map((rack, idx) => (
-                        <button
-                            key={rack}
-                            style={{
-                                padding: 'var(--spacing-sm) var(--spacing-md)',
-                                backgroundColor: idx === 0 ? 'var(--color-primary)' : 'transparent',
-                                color: idx === 0 ? 'var(--color-white)' : 'var(--color-gray-700)',
-                                border: 'none',
-                                borderRadius: 'var(--radius-md)',
-                                cursor: 'pointer',
-                                fontWeight: 'var(--font-weight-medium)'
-                            }}
-                        >
-                            {rack}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Grid Placeholder */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(8, 1fr)',
-                    gap: 'var(--spacing-xs)',
-                    marginTop: 'var(--spacing-lg)'
-                }}>
-                    {Array.from({ length: 64 }).map((_, idx) => (
-                        <div
-                            key={idx}
-                            style={{
-                                aspectRatio: '1',
-                                backgroundColor: idx % 7 === 0 ? 'var(--color-primary-light)' : 'var(--color-gray-100)',
-                                borderRadius: 'var(--radius-sm)',
-                                border: '1px dashed var(--color-gray-300)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: 'var(--font-size-caption)',
-                                color: 'var(--color-gray-500)'
-                            }}
-                        >
-                            {String.fromCharCode(65 + Math.floor(idx / 8))}{(idx % 8) + 1}
-                        </div>
-                    ))}
-                </div>
-            </div>
+      <div className={styles.page}>
+        <h1 className={styles.title}>케이지 관리</h1>
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner} />
+          <p>데이터를 불러오는 중...</p>
         </div>
+      </div>
     );
+  }
+
+  if (error && !gridData) {
+    return (
+      <div className={styles.page}>
+        <h1 className={styles.title}>케이지 관리</h1>
+        <div className={styles.errorContainer}>
+          <p className={styles.errorMessage}>❌ {error}</p>
+          <button
+            className={styles.retryButton}
+            onClick={() => window.location.reload()}
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.page}>
+      <h1 className={styles.title}>케이지 관리</h1>
+
+      <div className={styles.card}>
+        <RackTabs
+          racks={racks}
+          selectedRackId={selectedRackId}
+          onSelectRack={selectRack}
+        />
+
+        {gridData && (
+          <CageGrid gridData={gridData} onCageDoubleClick={handleCageDoubleClick} />
+        )}
+      </div>
+
+      <ProfessorSelectModal
+        isOpen={showAssignModal}
+        onClose={handleCloseModals}
+        cage={selectedCage}
+        professors={professors}
+        onSelect={handleProfessorSelect}
+      />
+
+      <ConfirmReleaseModal
+        isOpen={showReleaseModal}
+        onClose={handleCloseModals}
+        cage={selectedCage}
+        onConfirm={handleReleaseConfirm}
+        loading={actionLoading}
+      />
+    </div>
+  );
 }

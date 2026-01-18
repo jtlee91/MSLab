@@ -1,0 +1,87 @@
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: var(--cage-size-mobile);
+  min-height: var(--cage-size-mobile);
+  border: 1px solid;
+  font-size: var(--font-size-caption);
+}
+
+.cell:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.cell--empty {
+  background-color: var(--color-white);
+  border-color: var(--color-gray-300);
+  border-style: dashed;
+  color: var(--color-gray-500);
+}
+
+.cell--empty:hover {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-primary);
+  border-style: solid;
+  color: var(--color-gray-700);
+}
+
+.cell--assigned {
+  border-style: solid;
+  color: var(--color-white);
+  font-weight: var(--font-weight-medium);
+}
+
+.cell--assigned:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+.cell__position {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  opacity: 0.9;
+}
+
+.cell__professor {
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  opacity: 0.95;
+}
+
+@media (min-width: 640px) {
+  .cell {
+    min-width: var(--cage-size-tablet);
+    min-height: var(--cage-size-tablet);
+  }
+
+  .cell__position {
+    font-size: var(--font-size-caption);
+  }
+
+  .cell__professor {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cell {
+    min-width: var(--cage-size-desktop);
+    min-height: var(--cage-size-desktop);
+  }
+
+  .cell__professor {
+    font-size: var(--font-size-caption);
+  }
+}

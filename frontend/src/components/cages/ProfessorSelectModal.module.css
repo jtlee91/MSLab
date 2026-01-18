@@ -1,0 +1,64 @@
+.description {
+  font-size: var(--font-size-body);
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-md);
+}
+
+.professorList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.professorItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.professorItem:hover {
+  background-color: var(--color-gray-50);
+  border-color: var(--professor-color, var(--color-primary));
+  transform: translateX(4px);
+}
+
+.professorItem:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.professorItem__color {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.professorItem__name {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-900);
+  flex: 1;
+}
+
+.professorItem__student {
+  font-size: var(--font-size-caption);
+  color: var(--color-gray-500);
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-gray-500);
+  font-size: var(--font-size-body);
+}
