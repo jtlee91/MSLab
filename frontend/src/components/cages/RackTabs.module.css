@@ -3,6 +3,14 @@
   gap: var(--spacing-xs);
   border-bottom: 2px solid var(--color-gray-200);
   margin-bottom: var(--spacing-lg);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {
@@ -17,6 +25,18 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   min-width: 80px;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 640px) {
+  .tab {
+    min-height: 44px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-caption);
+    min-width: 70px;
+  }
 }
 
 .tab:hover {

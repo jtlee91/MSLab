@@ -25,7 +25,7 @@ export default function RackSettings() {
       const response = await rackApi.getRacks();
       setRacks(response.racks);
     } catch {
-      showToast("랙 목록을 불러오는데 실패했습니다.", "error");
+      showToast("error", "랙 목록을 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
     }
@@ -55,16 +55,16 @@ export default function RackSettings() {
     try {
       if (selectedRack) {
         const response = await rackApi.updateRack(selectedRack.id, data as RackUpdate);
-        showToast(response.message, "success");
+        showToast("success", response.message);
       } else {
         const response = await rackApi.createRack(data as RackCreate);
-        showToast(response.message, "success");
+        showToast("success", response.message);
       }
       setShowFormModal(false);
       await fetchRacks();
     } catch (error) {
       const apiError = error as ApiError;
-      showToast(apiError.message, "error");
+      showToast("error", apiError.message);
     } finally {
       setActionLoading(false);
     }
@@ -76,13 +76,13 @@ export default function RackSettings() {
     setActionLoading(true);
     try {
       const response = await rackApi.deleteRack(rackToDelete.id);
-      showToast(response.message, "success");
+      showToast("success", response.message);
       setShowDeleteModal(false);
       setRackToDelete(null);
       await fetchRacks();
     } catch (error) {
       const apiError = error as ApiError;
-      showToast(apiError.message, "error");
+      showToast("error", apiError.message);
     } finally {
       setActionLoading(false);
     }
@@ -130,28 +130,48 @@ export default function RackSettings() {
               <tr>
                 <th>이름</th>
                 <th>크기</th>
-                <th>케이지 수</th>
+                <th>케이지</th>
                 <th>작업</th>
               </tr>
             </thead>
             <tbody>
-              {racks.map((rack) => (
-                <tr key={rack.id}>
-                  <td className={styles.nameCell}>{rack.name}</td>
-                  <td>
-                    {rack.rows}행 × {rack.columns}열
-                  </td>
-                  <td>{rack.rows * rack.columns}개</td>
-                  <td className={styles.actionsCell}>
-                    <Button variant="ghost" size="small" onClick={() => handleEditClick(rack)}>
-                      수정
-                    </Button>
-                    <Button variant="ghost" size="small" onClick={() => handleDeleteClick(rack)}>
-                      삭제
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {racks.map((rack) => {
+                const totalCages = rack.rows * rack.columns;
+                const hasAssigned = rack.assigned_count > 0;
+
+                return (
+                  <tr key={rack.id}>
+                    <td className={styles.nameCell}>{rack.name}</td>
+                    <td>
+                      {rack.rows}행 × {rack.columns}열
+                    </td>
+                    <td>
+                      <span className={styles.cageCount}>
+                        {totalCages}개
+                        {hasAssigned && (
+                          <span className={styles.assignedBadge}>
+                            {rack.assigned_count}개 사용중
+                          </span>
+                        )}
+                      </span>
+                    </td>
+                    <td className={styles.actionsCell}>
+                      <Button variant="ghost" size="small" onClick={() => handleEditClick(rack)}>
+                        수정
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="small"
+                        onClick={() => handleDeleteClick(rack)}
+                        disabled={hasAssigned}
+                        title={hasAssigned ? "사용 중인 케이지가 있어 삭제할 수 없습니다" : ""}
+                      >
+                        삭제
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

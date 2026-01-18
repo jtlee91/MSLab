@@ -38,9 +38,26 @@ def _create_cages_for_rack(db: Session, rack: Rack) -> None:
 
 @router.get("", response_model=RackListResponse)
 def get_racks(db: Session = Depends(get_db)):
-    """Get all racks ordered by display_order."""
+    """Get all racks ordered by display_order with assigned cage count."""
     racks = db.query(Rack).order_by(Rack.display_order).all()
-    return RackListResponse(racks=racks)
+
+    rack_responses = []
+    for rack in racks:
+        assigned_count = (
+            db.query(Cage)
+            .filter(Cage.rack_id == rack.id, Cage.current_professor_id.isnot(None))
+            .count()
+        )
+        rack_responses.append({
+            "id": rack.id,
+            "name": rack.name,
+            "rows": rack.rows,
+            "columns": rack.columns,
+            "display_order": rack.display_order,
+            "assigned_count": assigned_count,
+        })
+
+    return RackListResponse(racks=rack_responses)
 
 
 @router.get("/{rack_id}", response_model=RackResponse)
@@ -81,7 +98,7 @@ def create_rack(rack_data: RackCreate, db: Session = Depends(get_db)):
 
 @router.put("/{rack_id}", response_model=RackActionResponse)
 def update_rack(rack_id: int, rack_data: RackUpdate, db: Session = Depends(get_db)):
-    """Update a rack. Only name and display_order can be changed."""
+    """Update a rack. Size can be increased freely, but decreasing requires checking assigned cages."""
     rack = db.query(Rack).filter(Rack.id == rack_id).first()
     if not rack:
         raise HTTPException(status_code=404, detail="랙을 찾을 수 없습니다.")
@@ -100,26 +117,88 @@ def update_rack(rack_id: int, rack_data: RackUpdate, db: Session = Depends(get_d
         rack.display_order = rack_data.display_order
 
     if rack_data.rows is not None or rack_data.columns is not None:
-        has_assigned = (
-            db.query(Cage)
-            .filter(Cage.rack_id == rack_id, Cage.current_professor_id.isnot(None))
-            .first()
-        )
-        if has_assigned:
-            raise HTTPException(
-                status_code=400,
-                detail="배정된 케이지가 있어 크기를 변경할 수 없습니다.",
-            )
-
         new_rows = rack_data.rows if rack_data.rows is not None else rack.rows
         new_cols = rack_data.columns if rack_data.columns is not None else rack.columns
+        old_rows = rack.rows
+        old_cols = rack.columns
 
-        db.query(Cage).filter(Cage.rack_id == rack_id).delete()
+        is_shrinking_rows = new_rows < old_rows
+        is_shrinking_cols = new_cols < old_cols
+
+        if is_shrinking_rows:
+            assigned_in_removed_rows = (
+                db.query(Cage)
+                .filter(
+                    Cage.rack_id == rack_id,
+                    Cage.row_index >= new_rows,
+                    Cage.current_professor_id.isnot(None),
+                )
+                .first()
+            )
+            if assigned_in_removed_rows:
+                removed_row_letters = ", ".join(
+                    chr(ord("A") + i) for i in range(new_rows, old_rows)
+                )
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"삭제될 행({removed_row_letters})에 배정된 케이지가 있어 크기를 줄일 수 없습니다.",
+                )
+
+        if is_shrinking_cols:
+            assigned_in_removed_cols = (
+                db.query(Cage)
+                .filter(
+                    Cage.rack_id == rack_id,
+                    Cage.col_index >= new_cols,
+                    Cage.current_professor_id.isnot(None),
+                )
+                .first()
+            )
+            if assigned_in_removed_cols:
+                removed_col_numbers = ", ".join(
+                    str(i + 1) for i in range(new_cols, old_cols)
+                )
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"삭제될 열({removed_col_numbers}번)에 배정된 케이지가 있어 크기를 줄일 수 없습니다.",
+                )
+
+        if is_shrinking_rows:
+            db.query(Cage).filter(
+                Cage.rack_id == rack_id,
+                Cage.row_index >= new_rows,
+            ).delete()
+
+        if is_shrinking_cols:
+            db.query(Cage).filter(
+                Cage.rack_id == rack_id,
+                Cage.col_index >= new_cols,
+            ).delete()
+
+        if new_rows > old_rows:
+            for row in range(old_rows, new_rows):
+                for col in range(new_cols):
+                    cage = Cage(
+                        rack_id=rack_id,
+                        position=_generate_position(row, col),
+                        row_index=row,
+                        col_index=col,
+                    )
+                    db.add(cage)
+
+        if new_cols > old_cols:
+            for row in range(min(old_rows, new_rows)):
+                for col in range(old_cols, new_cols):
+                    cage = Cage(
+                        rack_id=rack_id,
+                        position=_generate_position(row, col),
+                        row_index=row,
+                        col_index=col,
+                    )
+                    db.add(cage)
+
         rack.rows = new_rows
         rack.columns = new_cols
-        db.flush()
-
-        _create_cages_for_rack(db, rack)
 
     db.commit()
     db.refresh(rack)

@@ -13,6 +13,10 @@
   min-height: var(--cage-size-mobile);
   border: 1px solid;
   font-size: var(--font-size-caption);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .cell:focus-visible {

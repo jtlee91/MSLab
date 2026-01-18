@@ -42,4 +42,5 @@ class Cage(Base):
     assignments: Mapped[list["Assignment"]] = relationship(
         "Assignment",
         back_populates="cage",
+        cascade="all, delete-orphan",
     )

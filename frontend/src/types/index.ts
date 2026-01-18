@@ -36,6 +36,7 @@ export interface Rack {
   rows: number;
   columns: number;
   display_order: number;
+  assigned_count: number;
 }
 
 export interface RackListResponse {

@@ -12,6 +12,8 @@
     transition: all var(--transition-fast);
     white-space: nowrap;
     user-select: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .button:disabled {
@@ -129,5 +131,17 @@
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+/* 모바일 터치 최적화 - 최소 44px 터치 영역 보장 */
+@media (max-width: 640px) {
+    .button {
+        min-height: 44px;
+    }
+
+    .button--small {
+        min-height: 44px;
+        padding: 0 var(--spacing-md);
     }
 }

@@ -27,6 +27,7 @@ class RackUpdate(BaseModel):
 class RackResponse(RackBase):
     """Schema for Rack response."""
     id: int
+    assigned_count: int = 0
 
     class Config:
         from_attributes = True

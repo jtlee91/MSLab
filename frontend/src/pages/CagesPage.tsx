@@ -30,7 +30,7 @@ export default function CagesPage() {
   const [showReleaseModal, setShowReleaseModal] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const handleCageDoubleClick = useCallback((cage: Cage) => {
+  const handleCageClick = useCallback((cage: Cage) => {
     setSelectedCage(cage);
     if (cage.current_professor) {
       setShowReleaseModal(true);
@@ -125,7 +125,7 @@ export default function CagesPage() {
         />
 
         {gridData && (
-          <CageGrid gridData={gridData} onCageDoubleClick={handleCageDoubleClick} />
+          <CageGrid gridData={gridData} onCageClick={handleCageClick} />
         )}
       </div>
 
