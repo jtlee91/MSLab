@@ -5,23 +5,26 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Install uv
+RUN pip install uv
+
+# Copy dependency files
 COPY pyproject.toml uv.lock ./
-RUN pip install uv && uv sync --frozen --no-dev
+
+# Install dependencies
+RUN uv sync --frozen --no-dev
 
 # Copy application code
 COPY . .
 
-# Create data directory for SQLite
-RUN mkdir -p /data
+# Make start script executable
+RUN chmod +x start.sh
 
 # Expose port
 EXPOSE 8080
-
-# Make start script executable
-RUN chmod +x start.sh
 
 # Run the application
 CMD ["./start.sh"]

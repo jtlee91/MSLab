@@ -1,0 +1,22 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: mslab-api
+    runtime: docker
+    region: singapore  # Closest to Korea
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mslab-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://ms-lab.vercel.app,http://localhost:5173
+      - key: SECRET_KEY
+        generateValue: true
+
+databases:
+  - name: mslab-db
+    plan: free
+    region: singapore
