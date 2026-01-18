@@ -6,7 +6,7 @@
 
 ## M0: 프로젝트 초기화 및 기술 스택 설정
 
-### [] M0-1: 개발 환경 구성
+### [x] M0-1: 개발 환경 구성
 
 **컨텍스트**: 프론트엔드(React+Vite)와 백엔드(FastAPI)를 위한 개발 환경을 구성합니다.
 
@@ -16,10 +16,10 @@
 - 참조: [02_TRD.md](file:///Users/jtlee/.gemini/antigravity/brain/0182e2fd-b223-4565-a570-acc207075130/02_TRD.md)
 
 **인수 조건**:
-- [ ] `frontend/` 폴더에 Vite+React 프로젝트 생성
-- [ ] `backend/` 폴더에 FastAPI 프로젝트 생성
-- [ ] 로컬에서 프론트/백엔드 동시 실행 가능
-- [ ] `.env.example` 파일 생성
+- [x] `frontend/` 폴더에 Vite+React 프로젝트 생성
+- [x] `backend/` 폴더에 FastAPI 프로젝트 생성
+- [x] 로컬에서 프론트/백엔드 동시 실행 가능
+- [x] `.env.example` 파일 생성
 
 **자가 수정 지침**: 의존성 설치 오류 시 버전 호환성 확인 후 재시도
 
