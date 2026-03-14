@@ -1,5 +1,7 @@
 """FastAPI application entry point."""
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -8,10 +10,28 @@ from app.config import get_settings
 
 settings = get_settings()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Run seed on startup if database is empty."""
+    from app.database import SessionLocal
+    from app.models import User
+
+    db = SessionLocal()
+    try:
+        if not db.query(User).first():
+            from app.seed import seed_database
+            seed_database()
+    finally:
+        db.close()
+    yield
+
+
 app = FastAPI(
     title="MSLab Cage Management API",
     description="연구실 케이지 관리 서비스 API",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 # CORS middleware
